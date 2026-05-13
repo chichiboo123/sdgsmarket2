@@ -6,6 +6,7 @@
   <title>SDGs 마켓</title>
   <meta name="description" content="SDGs 17개 목표를 학습하고 나만의 실천 계획을 작성하는 교육용 마켓플레이스" />
   <meta name="theme-color" content="#0054A6" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,24 +18,25 @@
 
   <!-- ── 헤더 ── -->
   <header id="main-header">
-    <div id="lang-selector" aria-label="언어 선택">
-      <button id="lang-btn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-controls="lang-menu">
-        <span aria-hidden="true">🌐</span>
-        <span id="lang-btn-label">한국어</span>
-        <span class="caret" aria-hidden="true"></span>
-      </button>
-      <ul id="lang-menu" class="hidden" role="listbox" aria-label="언어 선택">
-        <li data-lang="ko" role="option" tabindex="0">한국어</li>
-        <li data-lang="en" role="option" tabindex="0">English</li>
-        <li data-lang="ja" role="option" tabindex="0">日本語</li>
-        <li data-lang="id" role="option" tabindex="0">Bahasa Indonesia</li>
-      </ul>
-    </div>
-
     <h1 id="header-title" data-i18n="header_title">SDGs 마켓</h1>
 
     <nav aria-label="주 네비게이션">
       <button type="button" data-action="nav" data-page="home" data-nav="home" data-i18n="nav_home">홈</button>
+
+      <div id="lang-selector" aria-label="언어 선택">
+        <button id="lang-btn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-controls="lang-menu">
+          <span aria-hidden="true">🌐</span>
+          <span id="lang-btn-label">한국어</span>
+          <span class="caret" aria-hidden="true"></span>
+        </button>
+        <ul id="lang-menu" class="hidden" role="listbox" aria-label="언어 선택">
+          <li data-lang="ko" role="option" tabindex="0">한국어</li>
+          <li data-lang="en" role="option" tabindex="0">English</li>
+          <li data-lang="ja" role="option" tabindex="0">日本語</li>
+          <li data-lang="idn" role="option" tabindex="0">Bahasa Indonesia</li>
+        </ul>
+      </div>
+
       <button type="button" data-action="nav" data-page="cart" data-nav="cart" id="nav-cart-btn" aria-label="장바구니" data-i18n-aria-label="nav_cart">
         <span aria-hidden="true">🛒</span>
         <span class="nav-cart-text" data-i18n="nav_cart">장바구니</span>
@@ -222,6 +224,7 @@
 
       <h3 class="subhead" data-i18n="sdg_info_goals">17가지 목표</h3>
       <div id="sdg-dots" aria-label="17개 SDGs 목표 바로가기"></div>
+      <p class="sdg-source">자료 출제: <a href="https://sdgs.un.org" target="_blank" rel="noopener noreferrer">UN 지속가능발전목표 공식 웹사이트 (sdgs.un.org)</a></p>
     </div>
   </div>
 

@@ -29,7 +29,6 @@
   --cart-bar-h: 64px;
 }
 
-/* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -87,16 +86,19 @@ button { cursor: pointer; }
   font-family: var(--font-logo);
   font-size: 1.5rem;
   letter-spacing: 0.02em;
-  flex: 1;
-  text-align: center;
   white-space: nowrap;
   user-select: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
 #main-header nav {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: auto;
 }
 
 #main-header nav button {
@@ -184,7 +186,7 @@ button { cursor: pointer; }
 #lang-menu {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
+  right: 0;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
@@ -396,13 +398,15 @@ button { cursor: pointer; }
 }
 
 .card-header {
-  padding: 14px 14px 16px;
+  padding: 14px 14px 14px;
+  padding-right: 62px;
   color: white;
   position: relative;
-  min-height: 148px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  overflow: hidden;
 }
 
 .card-number {
@@ -413,8 +417,18 @@ button { cursor: pointer; }
 }
 
 .card-icon {
-  font-size: 1.9rem;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
   line-height: 1;
+  background: rgba(255,255,255,0.22);
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-title {
@@ -437,10 +451,10 @@ button { cursor: pointer; }
 
 .card-check {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 26px;
-  height: 26px;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: rgba(255,255,255,0.95);
   color: var(--color-primary);
@@ -448,8 +462,9 @@ button { cursor: pointer; }
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   box-shadow: var(--shadow-xs);
+  z-index: 2;
 }
 
 .sdg-card.in-cart .card-check { display: flex; }
@@ -459,6 +474,7 @@ button { cursor: pointer; }
   display: flex;
   gap: 6px;
   background: var(--color-white);
+  margin-top: auto;
 }
 
 .btn-select {
@@ -906,7 +922,6 @@ fieldset input[aria-invalid="true"] {
 
 .btn-secondary:hover { background: rgba(0,84,166,0.06); }
 
-/* ── Submit Button ── */
 #btn-submit {
   background: var(--color-primary);
   color: white;
@@ -1104,7 +1119,7 @@ fieldset input[aria-invalid="true"] {
 
 .pillar-icon { font-size: 1.8rem; line-height: 1; }
 
-/* ── SDG Dots ── */
+/* ── SDG Dots (official images) ── */
 #sdg-dots {
   display: flex;
   flex-wrap: wrap;
@@ -1114,25 +1129,48 @@ fieldset input[aria-invalid="true"] {
 }
 
 .sdg-dot {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  border: 2px solid transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: 700;
-  font-size: 0.95rem;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: var(--shadow-xs);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.sdg-dot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .sdg-dot:hover,
 .sdg-dot:focus-visible {
-  transform: scale(1.15);
+  transform: scale(1.12);
   box-shadow: var(--shadow-md);
+  border-color: rgba(0,0,0,0.2);
 }
+
+.sdg-source {
+  font-size: 0.78rem;
+  color: var(--color-text-sub);
+  margin-top: 12px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.sdg-source a {
+  color: var(--color-blue);
+  text-decoration: none;
+}
+
+.sdg-source a:hover { text-decoration: underline; }
 
 /* ── Accordion ── */
 #sdg-accordion {
@@ -1362,10 +1400,9 @@ fieldset input[aria-invalid="true"] {
 @media (max-width: 768px) {
   #sdg-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   #main-header { padding: 8px 12px; gap: 8px; height: auto; min-height: var(--header-h); }
-  #header-title { font-size: 1.15rem; order: 1; flex: 1; }
-  #lang-selector { order: 0; }
-  nav { order: 2; }
+  #header-title { font-size: 1.15rem; }
   #main-header nav button { padding: 6px 10px; font-size: 0.85rem; }
+  #lang-btn { font-size: 0.8rem; padding: 6px 8px; }
   #nav-cart-btn .nav-cart-text { display: none; }
   .slide { min-height: 200px; }
   .slide-text-banner h2 { font-size: 1.35rem; }
@@ -1378,7 +1415,7 @@ fieldset input[aria-invalid="true"] {
 @media (max-width: 500px) {
   .page { padding: 18px 12px; }
   .card-desc { display: none; }
-  .card-header { min-height: 120px; padding: 12px; }
+  .card-header { height: 120px; padding-right: 56px; }
   .card-title { font-size: 0.95rem; }
   .modal-content { padding: 24px 18px 20px; }
   .card-actions { flex-direction: column; gap: 6px; }
