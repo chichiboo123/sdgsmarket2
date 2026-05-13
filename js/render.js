@@ -26,9 +26,9 @@ function renderSDGCards() {
     card.dataset.id = g.id;
     card.innerHTML = `
       <div class="card-header" style="background:${escapeHtml(g.color)}">
+        <span class="card-icon" aria-hidden="true">${escapeHtml(g.icon)}</span>
         <span class="card-check" aria-hidden="true">✓</span>
         <span class="card-number">SDG ${g.id}</span>
-        <span class="card-icon" aria-hidden="true">${escapeHtml(g.icon)}</span>
         <h3 class="card-title">${escapeHtml(langData.title)}</h3>
         <p class="card-desc">${escapeHtml(langData.desc)}</p>
       </div>
@@ -160,7 +160,6 @@ function showToast(message) {
   toast.className = 'toast';
   toast.textContent = message == null ? '' : String(message);
   container.appendChild(toast);
-  // eslint-disable-next-line no-unused-expressions
   toast.offsetHeight;
   requestAnimationFrame(() => toast.classList.add('show'));
   setTimeout(() => {

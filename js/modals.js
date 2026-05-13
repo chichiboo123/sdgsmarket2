@@ -15,7 +15,6 @@ function openModal(modalId) {
   el.setAttribute('aria-hidden', 'false');
   modalStack.push(el);
   document.body.style.overflow = 'hidden';
-  // Focus first focusable element inside modal-content
   const content = el.querySelector('.modal-content');
   const focusables = getFocusableEls(content || el);
   if (focusables.length > 0) {
@@ -48,7 +47,6 @@ document.addEventListener('keydown', (e) => {
     closeTopModal();
     return;
   }
-  // Simple focus trap for top modal
   if (e.key === 'Tab' && modalStack.length > 0) {
     const top = modalStack[modalStack.length - 1];
     const focusables = Array.from(getFocusableEls(top));
@@ -74,10 +72,16 @@ function openSdgsInfoModal() {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'sdg-dot';
-      btn.style.background = g.color;
       btn.title = `SDG ${g.id}. ${ld.title}`;
       btn.setAttribute('aria-label', `SDG ${g.id}. ${ld.title}`);
-      btn.textContent = String(g.id);
+
+      const padded = String(g.id).padStart(2, '0');
+      const img = document.createElement('img');
+      img.src = `https://sdgs.un.org/sites/default/files/goals/E_SDG_Icons-${padded}.jpg`;
+      img.alt = `SDG ${g.id}`;
+      img.loading = 'lazy';
+      btn.appendChild(img);
+
       btn.addEventListener('click', () => {
         closeModal('modal-sdgs-info');
         openSdgsDictModal(g.id);
