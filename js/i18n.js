@@ -1,6 +1,6 @@
 let currentLang = localStorage.getItem('sdg-lang') || 'ko';
 
-const LANG_LABELS = { ko: '한국어', en: 'English', ja: '日本語', id: 'Bahasa Indonesia' };
+const LANG_LABELS = { ko: '한국어', en: 'English', ja: '日本語', idn: 'Bahasa Indonesia' };
 
 function t(key, vars) {
   const dict = T[currentLang] || T.ko;
@@ -50,7 +50,6 @@ function applyTranslations() {
   const langLabelEl = document.getElementById('lang-btn-label');
   if (langLabelEl) langLabelEl.textContent = LANG_LABELS[currentLang] || LANG_LABELS.ko;
 
-  // Mark active language in the menu
   document.querySelectorAll('#lang-menu li').forEach(li => {
     li.classList.toggle('active', li.dataset.lang === currentLang);
     li.setAttribute('aria-selected', String(li.dataset.lang === currentLang));
