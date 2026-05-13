@@ -8,7 +8,14 @@ function navigateTo(page) {
   currentPage = page;
   document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
   document.getElementById(`page-${page}`)?.classList.remove('hidden');
-  window.scrollTo(0, 0);
+
+  // Update nav active state
+  document.querySelectorAll('[data-nav]').forEach(btn => {
+    if (btn.dataset.nav === page) btn.setAttribute('aria-current', 'page');
+    else btn.removeAttribute('aria-current');
+  });
+
+  window.scrollTo({ top: 0, behavior: 'instant' in HTMLElement.prototype ? 'auto' : 'auto' });
   renderCurrentPage();
 }
 
@@ -17,6 +24,7 @@ function renderCurrentPage() {
   if (currentPage === 'home') renderSDGCards();
   if (currentPage === 'cart') renderCartPage();
   if (currentPage === 'checkout') renderCheckoutPage();
+  updateCartBar();
 }
 
 // Global click delegation
@@ -32,6 +40,7 @@ document.body.addEventListener('click', (e) => {
 
     case 'toggle-cart': {
       const id = Number(target.dataset.id);
+      const card = document.querySelector(`.sdg-card[data-id="${id}"]`);
       if (isInCart(id)) {
         removeFromCart(id);
         showToast(t('toast_removed'));
@@ -40,11 +49,15 @@ document.body.addEventListener('click', (e) => {
         showToast(t('toast_added'));
       }
       updateCartBadge();
-      const card = document.querySelector(`.sdg-card[data-id="${id}"] .btn-select`);
       if (card) {
         const inCart = isInCart(id);
-        card.textContent = inCart ? t('btn_selected') : t('btn_select');
-        card.classList.toggle('selected', inCart);
+        card.classList.toggle('in-cart', inCart);
+        const btn = card.querySelector('.btn-select');
+        if (btn) {
+          btn.textContent = inCart ? t('btn_selected') : t('btn_select');
+          btn.classList.toggle('selected', inCart);
+          btn.setAttribute('aria-pressed', String(inCart));
+        }
       }
       break;
     }
@@ -64,7 +77,7 @@ document.body.addEventListener('click', (e) => {
       break;
 
     case 'open-youtube':
-      window.open('https://www.youtube.com/watch?v=0XTBYMfZyrM', '_blank');
+      window.open('https://www.youtube.com/watch?v=0XTBYMfZyrM', '_blank', 'noopener,noreferrer');
       break;
 
     case 'open-sdgs-info':
@@ -81,6 +94,18 @@ document.body.addEventListener('click', (e) => {
   }
 });
 
+// Keyboard activation for slide elements (role=button)
+document.body.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const target = e.target.closest('[data-action]');
+  if (!target) return;
+  // Only handle elements that aren't natural buttons/inputs
+  if (target.tagName === 'BUTTON' || target.tagName === 'INPUT' || target.tagName === 'A') return;
+  if (['nav', 'toggle-cart', 'quick-buy', 'remove-from-cart', 'close-modal'].includes(target.dataset.action)) return;
+  e.preventDefault();
+  target.click();
+});
+
 // Language dropdown
 const langBtn = document.getElementById('lang-btn');
 const langMenu = document.getElementById('lang-menu');
@@ -92,8 +117,10 @@ langBtn?.addEventListener('click', (e) => {
   langBtn.setAttribute('aria-expanded', String(!isOpen));
 });
 
-document.addEventListener('click', () => {
-  langMenu?.classList.add('hidden');
+document.addEventListener('click', (e) => {
+  if (!langMenu) return;
+  if (e.target.closest('#lang-selector')) return;
+  langMenu.classList.add('hidden');
   langBtn?.setAttribute('aria-expanded', 'false');
 });
 
@@ -102,6 +129,19 @@ langMenu?.addEventListener('click', (e) => {
   if (!li) return;
   setLang(li.dataset.lang);
   langMenu.classList.add('hidden');
+  langBtn?.setAttribute('aria-expanded', 'false');
+  langBtn?.focus();
+});
+
+langMenu?.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const li = e.target.closest('[data-lang]');
+  if (!li) return;
+  e.preventDefault();
+  setLang(li.dataset.lang);
+  langMenu.classList.add('hidden');
+  langBtn?.setAttribute('aria-expanded', 'false');
+  langBtn?.focus();
 });
 
 // Checkout form submission
@@ -124,6 +164,22 @@ document.getElementById('checkout-form')?.addEventListener('submit', (e) => {
   submitBtn.disabled = false;
 });
 
+// Real-time validation: clear error when user fixes input
+['input-name', 'input-school'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => clearFieldError(id));
+});
+document.getElementById('input-grade')?.addEventListener('change', () => clearFieldError('input-grade'));
+
+function clearFieldError(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const errEl = document.getElementById(`${id}-err`);
+  if (el.value && el.value.trim()) {
+    el.removeAttribute('aria-invalid');
+    if (errEl) errEl.remove();
+  }
+}
+
 function validateCheckoutForm() {
   let valid = true;
 
@@ -140,25 +196,29 @@ function validateCheckoutForm() {
     if (errEl) errEl.remove();
     if (!el.value.trim()) {
       valid = false;
-      el.style.borderColor = 'red';
+      el.setAttribute('aria-invalid', 'true');
       const msg = document.createElement('span');
       msg.id = `${id}-err`;
       msg.className = 'field-error';
+      msg.setAttribute('role', 'alert');
       msg.textContent = t(errKey);
       el.insertAdjacentElement('afterend', msg);
       if (!firstErrorEl) firstErrorEl = el;
     } else {
-      el.style.borderColor = '';
+      el.removeAttribute('aria-invalid');
     }
   });
 
   if (firstErrorEl) {
     firstErrorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstErrorEl.focus({ preventScroll: true });
   }
 
   const mode = document.querySelector('input[name="plan-mode"]:checked')?.value || 'text';
-  const textOk = mode === 'draw' || document.getElementById('input-plan-text')?.value.trim();
-  const drawOk = mode === 'text' || !isBlankCanvas(document.getElementById('drawing-canvas'));
+  const textVal = document.getElementById('input-plan-text')?.value.trim() || '';
+  const canvasEl = document.getElementById('drawing-canvas');
+  const textOk = mode === 'draw' || textVal.length > 0;
+  const drawOk = mode === 'text' || (canvasEl && !isBlankCanvas(canvasEl));
   if (!textOk || !drawOk) {
     valid = false;
     showToast(t('err_plan'));
@@ -177,20 +237,49 @@ document.getElementById('btn-complete')?.addEventListener('click', () => {
 document.getElementById('btn-go-home')?.addEventListener('click', () => {
   closeModal('modal-complete');
   clearCart();
+  resetCheckoutForm();
   updateCartBadge();
   navigateTo('home');
 });
 
+function resetCheckoutForm() {
+  const form = document.getElementById('checkout-form');
+  if (form) form.reset();
+  document.querySelectorAll('.field-error').forEach(el => el.remove());
+  document.querySelectorAll('[aria-invalid="true"]').forEach(el => el.removeAttribute('aria-invalid'));
+  const canvas = document.getElementById('drawing-canvas');
+  if (canvas) clearCanvas(canvas);
+}
+
 // Multi-tab cart sync
 window.addEventListener('storage', (e) => {
-  if (e.key === CART_KEY) updateCartBadge();
+  if (e.key === CART_KEY) {
+    updateCartBadge();
+    if (currentPage === 'cart') renderCartPage();
+    else if (currentPage === 'home') {
+      // Update card states without re-rendering everything
+      document.querySelectorAll('.sdg-card').forEach(card => {
+        const id = Number(card.dataset.id);
+        const inCart = isInCart(id);
+        card.classList.toggle('in-cart', inCart);
+        const btn = card.querySelector('.btn-select');
+        if (btn) {
+          btn.textContent = inCart ? t('btn_selected') : t('btn_select');
+          btn.classList.toggle('selected', inCart);
+          btn.setAttribute('aria-pressed', String(inCart));
+        }
+      });
+    }
+  }
 });
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = localStorage.getItem('sdg-lang') || 'ko';
   currentLang = savedLang;
+  document.documentElement.setAttribute('lang', savedLang);
   applyTranslations();
   initCarousel();
   navigateTo('home');
+  updateCartBadge();
 });

@@ -1,14 +1,26 @@
 const modalStack = [];
+const focusReturnMap = new WeakMap();
+
+function getFocusableEls(container) {
+  return container.querySelectorAll(
+    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  );
+}
 
 function openModal(modalId) {
   const el = document.getElementById(modalId);
   if (!el) return;
+  focusReturnMap.set(el, document.activeElement);
   el.classList.remove('hidden');
   el.setAttribute('aria-hidden', 'false');
   modalStack.push(el);
   document.body.style.overflow = 'hidden';
-  const focusable = el.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-  if (focusable) focusable.focus();
+  // Focus first focusable element inside modal-content
+  const content = el.querySelector('.modal-content');
+  const focusables = getFocusableEls(content || el);
+  if (focusables.length > 0) {
+    setTimeout(() => focusables[0].focus(), 30);
+  }
 }
 
 function closeModal(modalId) {
@@ -19,6 +31,11 @@ function closeModal(modalId) {
   const idx = modalStack.indexOf(el);
   if (idx > -1) modalStack.splice(idx, 1);
   if (modalStack.length === 0) document.body.style.overflow = '';
+  const returnFocus = focusReturnMap.get(el);
+  if (returnFocus && typeof returnFocus.focus === 'function') {
+    setTimeout(() => returnFocus.focus(), 0);
+  }
+  focusReturnMap.delete(el);
 }
 
 function closeTopModal() {
@@ -26,55 +43,90 @@ function closeTopModal() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeTopModal();
+  if (e.key === 'Escape' && modalStack.length > 0) {
+    e.preventDefault();
+    closeTopModal();
+    return;
+  }
+  // Simple focus trap for top modal
+  if (e.key === 'Tab' && modalStack.length > 0) {
+    const top = modalStack[modalStack.length - 1];
+    const focusables = Array.from(getFocusableEls(top));
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 });
 
 function openSdgsInfoModal() {
   const dotsEl = document.getElementById('sdg-dots');
-  if (dotsEl && dotsEl.children.length === 0) {
+  if (dotsEl) {
+    dotsEl.innerHTML = '';
     SDG_DATA.forEach(g => {
-      const span = document.createElement('span');
-      span.className = 'sdg-dot';
-      span.style.background = g.color;
-      span.title = g[currentLang]?.title || g.ko.title;
-      span.textContent = g.id;
-      span.addEventListener('click', () => { closeModal('modal-sdgs-info'); openSdgsDictModal(); });
-      dotsEl.appendChild(span);
-    });
-  } else if (dotsEl) {
-    // Update titles when language changes
-    Array.from(dotsEl.children).forEach((span, i) => {
-      const g = SDG_DATA[i];
-      span.title = g[currentLang]?.title || g.ko.title;
+      const ld = (g[currentLang] || g.ko);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sdg-dot';
+      btn.style.background = g.color;
+      btn.title = `SDG ${g.id}. ${ld.title}`;
+      btn.setAttribute('aria-label', `SDG ${g.id}. ${ld.title}`);
+      btn.textContent = String(g.id);
+      btn.addEventListener('click', () => {
+        closeModal('modal-sdgs-info');
+        openSdgsDictModal(g.id);
+      });
+      dotsEl.appendChild(btn);
     });
   }
   openModal('modal-sdgs-info');
 }
 
-function openSdgsDictModal() {
+function openSdgsDictModal(highlightId) {
   const accordionEl = document.getElementById('sdg-accordion');
+  if (!accordionEl) return;
   accordionEl.innerHTML = '';
   SDG_DATA.forEach(g => {
     const langData = g[currentLang] || g.ko;
     const item = document.createElement('div');
     item.className = 'accordion-item';
+    item.dataset.id = String(g.id);
     item.innerHTML = `
-      <button class="accordion-header" style="border-left: 4px solid ${g.color}">
-        <span>${g.icon} SDG ${g.id}. ${langData.title}</span>
-        <span class="accordion-arrow">▾</span>
+      <button type="button" class="accordion-header" style="border-left-color: ${escapeHtml(g.color)}" aria-expanded="false">
+        <span class="accordion-header-title">
+          <span aria-hidden="true">${escapeHtml(g.icon)}</span>
+          <span><strong>SDG ${g.id}.</strong> ${escapeHtml(langData.title)}</span>
+        </span>
+        <span class="accordion-arrow" aria-hidden="true"></span>
       </button>
       <div class="accordion-body hidden">
-        <p>${langData.desc}</p>
-        <ul>${(langData.targets || []).map(tgt => `<li>${tgt}</li>`).join('')}</ul>
+        <p>${escapeHtml(langData.desc)}</p>
+        <ul>${(langData.targets || []).map(tgt => `<li>${escapeHtml(tgt)}</li>`).join('')}</ul>
       </div>
     `;
-    item.querySelector('.accordion-header').addEventListener('click', () => {
-      const body = item.querySelector('.accordion-body');
-      const arrow = item.querySelector('.accordion-arrow');
-      body.classList.toggle('hidden');
-      arrow.textContent = body.classList.contains('hidden') ? '▾' : '▴';
+    const header = item.querySelector('.accordion-header');
+    const body = item.querySelector('.accordion-body');
+    header.addEventListener('click', () => {
+      const isHidden = body.classList.contains('hidden');
+      body.classList.toggle('hidden', !isHidden);
+      header.setAttribute('aria-expanded', String(isHidden));
     });
     accordionEl.appendChild(item);
   });
   openModal('modal-sdgs-dict');
+
+  if (highlightId != null) {
+    const target = accordionEl.querySelector(`.accordion-item[data-id="${highlightId}"]`);
+    if (target) {
+      const header = target.querySelector('.accordion-header');
+      header?.click();
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+    }
+  }
 }
