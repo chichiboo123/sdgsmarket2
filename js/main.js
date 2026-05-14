@@ -88,17 +88,6 @@ document.body.addEventListener('click', (e) => {
       openSdgsDictModal();
       break;
 
-    case 'open-howto':
-      openModal('modal-howto');
-      break;
-
-    case 'clear-cart':
-      clearCart();
-      updateCartBadge();
-      renderCartPage();
-      showToast('장바구니를 비웠습니다');
-      break;
-
     case 'close-modal':
       closeModal(target.dataset.target);
       break;
