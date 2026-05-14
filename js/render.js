@@ -141,16 +141,9 @@ function updateCartBadge() {
 
 function updateCartBar() {
   const bar = document.getElementById('cart-bar');
-  const textEl = document.getElementById('cart-bar-text');
-  const count = getCart().length;
   if (!bar) return;
-
-  const hideOnPage = currentPage === 'cart' || currentPage === 'checkout';
-  const shouldShow = count > 0 && !hideOnPage;
-
-  bar.classList.toggle('hidden', !shouldShow);
-  document.body.classList.toggle('cart-bar-visible', shouldShow);
-  if (textEl) textEl.textContent = t('cart_bar_text_template', { n: count });
+  bar.classList.add('hidden');
+  document.body.classList.remove('cart-bar-visible');
 }
 
 function showToast(message) {

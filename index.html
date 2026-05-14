@@ -37,6 +37,8 @@
         </ul>
       </div>
 
+      <button type="button" id="btn-howto" data-action="open-howto" aria-label="사용법 안내 열기">❓ 사용법</button>
+
       <button type="button" data-action="nav" data-page="cart" data-nav="cart" id="nav-cart-btn" aria-label="장바구니" data-i18n-aria-label="nav_cart">
         <span aria-hidden="true">🛒</span>
         <span class="nav-cart-text" data-i18n="nav_cart">장바구니</span>
@@ -96,7 +98,10 @@
     <div id="cart-list" role="list"></div>
     <div id="cart-footer" class="hidden">
       <span id="cart-count"></span>
-      <button id="btn-checkout" type="button" data-action="nav" data-page="checkout" data-i18n="btn_checkout">구매하기</button>
+      <div class="cart-footer-actions">
+        <button id="btn-clear-cart" type="button" data-action="clear-cart">장바구니 비우기</button>
+        <button id="btn-checkout" type="button" data-action="nav" data-page="checkout" data-i18n="btn_checkout">구매하기</button>
+      </div>
     </div>
   </div>
 
@@ -267,12 +272,29 @@
     </div>
   </div>
 
+  <div id="modal-howto" class="modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-howto-title">
+    <div class="modal-overlay" data-action="close-modal" data-target="modal-howto"></div>
+    <div class="modal-content">
+      <button class="modal-close" type="button" data-action="close-modal" data-target="modal-howto" aria-label="닫기">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h2 id="modal-howto-title">사용법</h2>
+      <ol class="howto-list">
+        <li>홈에서 SDGs 목표를 선택하면 우측 상단 장바구니 숫자가 올라갑니다.</li>
+        <li>장바구니에서 항목별 삭제 또는 ‘장바구니 비우기’를 사용할 수 있습니다.</li>
+        <li>구매하기로 이동해 실천 계획을 작성하고 완료하면 학습 영수증을 확인할 수 있습니다.</li>
+      </ol>
+      <p class="howto-dev">개발자 : 교육뮤지컬 꿈꾸는 치수쌤</p>
+    </div>
+  </div>
+
   <!-- ── 토스트 컨테이너 ── -->
   <div id="toast-container" role="alert" aria-live="polite"></div>
 
   <!-- ── 푸터 ── -->
   <footer id="site-footer">
     <a href="https://litt.ly/chichiboo" target="_blank" rel="noopener noreferrer">created by. 교육뮤지컬 꿈꾸는 치수쌤</a>
+    <p class="footer-note">이 웹페이지는 SDGs 교육을 위한 학습용 사이트로, 실제 결제나 상품 배송은 이루어지지 않습니다.</p>
   </footer>
 
   <!-- ── 스크립트 (순서 중요) ── -->
