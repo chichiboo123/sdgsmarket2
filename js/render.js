@@ -58,10 +58,11 @@ function renderCartPage() {
   if (cart.length === 0) {
     listEl.innerHTML = `
       <div class="empty-msg">
-        <span class="empty-emoji" aria-hidden="true">🛒</span>
+        <span class="empty-icon" aria-hidden="true"><span class="material-icons-round">shopping_cart</span></span>
         <div class="empty-title">${escapeHtml(t('cart_empty_title'))}</div>
         <div class="empty-sub">${escapeHtml(t('cart_empty_sub'))}</div>
         <button type="button" class="btn-back" data-action="nav" data-page="home">
+          <span class="material-icons-round" aria-hidden="true">arrow_back</span>
           ${escapeHtml(t('btn_back_home'))}
         </button>
       </div>`;
@@ -77,13 +78,15 @@ function renderCartPage() {
     item.className = 'cart-item';
     item.setAttribute('role', 'listitem');
     item.innerHTML = `
-      <div class="cart-item-icon" style="background:${escapeHtml(g.color)}" aria-hidden="true">${escapeHtml(g.icon)}</div>
-      <div class="cart-item-info">
-        <span class="cart-item-number">SDG ${g.id}</span>
-        <strong>${escapeHtml(langData.title)}</strong>
+      <div class="cart-item-strip" style="background:${escapeHtml(g.color)}"></div>
+      <div class="cart-item-thumb" style="background:${escapeHtml(g.color)}22" aria-hidden="true">${escapeHtml(g.icon)}</div>
+      <div class="cart-item-body">
+        <span class="cart-item-tag">SDG ${g.id}</span>
+        <strong class="cart-item-title">${escapeHtml(langData.title)}</strong>
+        <p class="cart-item-desc">${escapeHtml(langData.desc)}</p>
       </div>
-      <button type="button" class="btn-remove" data-action="remove-from-cart" data-id="${g.id}" aria-label="${escapeHtml(langData.title)} 제거">
-        <span aria-hidden="true">×</span>
+      <button type="button" class="btn-remove-cart" data-action="remove-from-cart" data-id="${g.id}" aria-label="${escapeHtml(langData.title)} 제거">
+        <span class="material-icons-round" aria-hidden="true">delete_outline</span>
       </button>
     `;
     listEl.appendChild(item);
@@ -92,16 +95,6 @@ function renderCartPage() {
   footerEl.classList.remove('hidden');
   const countEl = document.getElementById('cart-count');
   if (countEl) countEl.textContent = t('cart_count_template', { n: cart.length });
-
-  const existingClear = footerEl.querySelector('.btn-clear-cart');
-  if (!existingClear) {
-    const clearBtn = document.createElement('button');
-    clearBtn.type = 'button';
-    clearBtn.className = 'btn-clear-cart';
-    clearBtn.dataset.action = 'clear-cart';
-    clearBtn.textContent = '🗑 장바구니 비우기';
-    footerEl.appendChild(clearBtn);
-  }
 }
 
 function renderCheckoutPage() {

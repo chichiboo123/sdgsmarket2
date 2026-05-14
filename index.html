@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-gov.min.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -18,15 +19,17 @@
 
   <!-- ── 헤더 ── -->
   <header id="main-header">
+    <button type="button" id="btn-home" data-action="nav" data-page="home" data-nav="home" aria-label="홈으로 이동">
+      <span class="material-icons-round" aria-hidden="true">home</span>
+    </button>
+
     <h1 id="header-title" data-i18n="header_title" role="button" tabindex="0" aria-label="홈으로 이동">SDGs 마켓</h1>
 
     <nav aria-label="주 네비게이션">
-      <button type="button" data-action="nav" data-page="home" data-nav="home" data-i18n="nav_home">홈</button>
-
       <div id="lang-selector" aria-label="언어 선택">
         <button id="lang-btn" type="button" aria-expanded="false" aria-haspopup="listbox" aria-controls="lang-menu">
-          <span aria-hidden="true">🌐</span>
-          <span id="lang-btn-label">한국어</span>
+          <span class="material-icons-round" aria-hidden="true">language</span>
+          <span id="lang-btn-label" class="lang-label">한국어</span>
           <span class="caret" aria-hidden="true"></span>
         </button>
         <ul id="lang-menu" class="hidden" role="listbox" aria-label="언어 선택">
@@ -38,13 +41,11 @@
       </div>
 
       <button type="button" id="nav-help-btn" data-action="open-help" aria-label="사용법 안내">
-        <span aria-hidden="true">❓</span>
-        <span class="nav-help-text">사용법</span>
+        <span class="material-icons-round" aria-hidden="true">help_outline</span>
       </button>
 
-      <button type="button" data-action="nav" data-page="cart" data-nav="cart" id="nav-cart-btn" aria-label="장바구니" data-i18n-aria-label="nav_cart">
-        <span aria-hidden="true">🛒</span>
-        <span class="nav-cart-text" data-i18n="nav_cart">장바구니</span>
+      <button type="button" id="nav-cart-btn" data-action="nav" data-page="cart" data-nav="cart" aria-label="장바구니" data-i18n-aria-label="nav_cart">
+        <span class="material-icons-round" aria-hidden="true">shopping_cart</span>
         <span id="cart-badge" class="hidden" aria-live="polite">0</span>
       </button>
     </nav>
@@ -100,8 +101,20 @@
     <h2 data-i18n="cart_title">장바구니</h2>
     <div id="cart-list" role="list"></div>
     <div id="cart-footer" class="hidden">
-      <span id="cart-count"></span>
-      <button id="btn-checkout" type="button" data-action="nav" data-page="checkout" data-i18n="btn_checkout">구매하기</button>
+      <div class="cart-summary-bar">
+        <span class="cart-summary-label" data-i18n="cart_summary_label">선택한 목표</span>
+        <strong id="cart-count"></strong>
+      </div>
+      <div class="cart-action-row">
+        <button type="button" class="btn-clear-cart" data-action="clear-cart">
+          <span class="material-icons-round" aria-hidden="true">delete_sweep</span>
+          장바구니 비우기
+        </button>
+        <button id="btn-checkout" type="button" data-action="nav" data-page="checkout">
+          <span data-i18n="btn_checkout">실천 계획 작성하기</span>
+          <span class="material-icons-round" aria-hidden="true">arrow_forward</span>
+        </button>
+      </div>
     </div>
   </div>
 
