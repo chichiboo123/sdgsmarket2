@@ -76,6 +76,19 @@ document.body.addEventListener('click', (e) => {
       renderCartPage();
       break;
 
+    case 'clear-cart':
+      if (confirm('장바구니를 모두 비울까요?')) {
+        clearCart();
+        updateCartBadge();
+        renderCartPage();
+        showToast('장바구니를 비웠습니다.');
+      }
+      break;
+
+    case 'open-help':
+      openModal('modal-help');
+      break;
+
     case 'open-youtube':
       window.open('https://www.youtube.com/watch?v=0XTBYMfZyrM', '_blank', 'noopener,noreferrer');
       break;
