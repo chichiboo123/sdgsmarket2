@@ -91,7 +91,8 @@ button { cursor: pointer; }
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 #main-header nav {
@@ -1394,6 +1395,23 @@ fieldset input[aria-invalid="true"] {
 .toast.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+#site-footer {
+  text-align: center;
+  padding: 20px 12px 28px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+#site-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#site-footer a:hover,
+#site-footer a:focus-visible {
+  text-decoration: underline;
 }
 
 /* ── Responsive ── */

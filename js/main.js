@@ -109,6 +109,14 @@ document.body.addEventListener('keydown', (e) => {
 // Language dropdown
 const langBtn = document.getElementById('lang-btn');
 const langMenu = document.getElementById('lang-menu');
+const headerTitle = document.getElementById('header-title');
+
+headerTitle?.addEventListener('click', () => navigateTo('home'));
+headerTitle?.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  e.preventDefault();
+  navigateTo('home');
+});
 
 langBtn?.addEventListener('click', (e) => {
   e.stopPropagation();
