@@ -39,11 +39,14 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
-  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.material-icons-round { font-family: 'Material Icons Round'; font-style: normal; font-weight: normal; display: inline-block; line-height: 1; letter-spacing: normal; text-transform: none; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
 
 button, input, select, textarea {
   font-family: inherit;
@@ -71,81 +74,98 @@ button { cursor: pointer; }
   z-index: 100;
   background: var(--color-blue);
   color: var(--color-white);
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 12px;
   height: var(--header-h);
   box-shadow: var(--shadow-sm);
-  gap: 12px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 #header-title {
   font-family: var(--font-logo);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   letter-spacing: 0.02em;
   white-space: nowrap;
   user-select: none;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: auto;
   cursor: pointer;
+  text-align: center;
+  color: var(--color-white);
 }
+
+/* 홈 버튼 (헤더 좌측) */
+#btn-home {
+  background: rgba(255,255,255,0.12);
+  color: var(--color-white);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: var(--radius-btn);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s;
+  flex-shrink: 0;
+}
+
+#btn-home:hover { background: rgba(255,255,255,0.24); }
+#btn-home[aria-current="page"] { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
+#btn-home .material-icons-round { font-size: 22px; }
 
 #main-header nav {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
-}
-
-#main-header nav button {
-  background: rgba(255,255,255,0.12);
-  color: var(--color-white);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: var(--radius-btn);
-  padding: 7px 14px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: background 0.18s, transform 0.1s;
-  display: inline-flex;
-  align-items: center;
   gap: 6px;
 }
 
-#main-header nav button:hover {
-  background: rgba(255,255,255,0.22);
+/* 아이콘 전용 정방형 버튼 */
+#main-header nav > button {
+  background: rgba(255,255,255,0.12);
+  color: var(--color-white);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: var(--radius-btn);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s;
+  flex-shrink: 0;
 }
 
-#main-header nav button[aria-current="page"] {
-  background: rgba(255,255,255,0.28);
-  border-color: rgba(255,255,255,0.55);
-  font-weight: 700;
+#main-header nav > button:hover { background: rgba(255,255,255,0.24); }
+#main-header nav > button[aria-current="page"] {
+  background: rgba(255,255,255,0.3);
+  border-color: rgba(255,255,255,0.6);
 }
+#main-header nav > button .material-icons-round { font-size: 22px; }
 
+/* 장바구니 버튼 — badge 절대 위치 */
 #nav-cart-btn {
   position: relative;
-  font-size: 0.95rem;
-}
-
-#nav-cart-btn .nav-cart-text {
-  display: inline;
 }
 
 #cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: var(--color-primary);
   color: white;
   border-radius: var(--radius-pill);
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  margin-left: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  border: 2px solid var(--color-blue);
+  pointer-events: none;
 }
 
 /* ── Language Selector ── */
@@ -156,17 +176,22 @@ button { cursor: pointer; }
 #lang-btn {
   background: rgba(255,255,255,0.12);
   color: var(--color-white);
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.22);
   border-radius: var(--radius-btn);
-  padding: 7px 12px;
-  font-size: 0.85rem;
+  padding: 0 10px;
+  height: 40px;
+  font-size: 0.82rem;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  transition: background 0.18s;
 }
 
-#lang-btn:hover { background: rgba(255,255,255,0.22); }
+#lang-btn:hover { background: rgba(255,255,255,0.24); }
+#lang-btn .material-icons-round { font-size: 20px; }
+
+#lang-btn .lang-label { font-size: 0.82rem; font-weight: 600; }
 
 #lang-btn .caret {
   display: inline-block;
@@ -218,8 +243,10 @@ button { cursor: pointer; }
 /* ── Pages ── */
 .page {
   max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 24px 16px 40px;
+  flex: 1;
 }
 
 .page > h2 {
@@ -519,81 +546,111 @@ button { cursor: pointer; }
 #cart-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
+/* 장바구니 아이템 — 온라인 쇼핑몰 스타일 */
 .cart-item {
   background: var(--color-white);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
   display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
+  align-items: stretch;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.15s;
 }
 
-.cart-item-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-btn);
+.cart-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.cart-item-strip {
+  width: 5px;
+  flex-shrink: 0;
+}
+
+.cart-item-thumb {
+  width: 72px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  flex-shrink: 0;
-  color: white;
+  font-size: 2rem;
+  padding: 8px 0;
 }
 
-.cart-item-info {
+.cart-item-body {
   flex: 1;
-  font-size: 0.95rem;
+  padding: 14px 12px 14px 10px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
-.cart-item-info .cart-item-number {
-  font-size: 0.75rem;
+.cart-item-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
   color: var(--color-text-sub);
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.cart-item-info strong { font-weight: 700; }
-
-.btn-remove {
-  background: var(--color-bg-sub);
-  border: 1px solid transparent;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  color: var(--color-text-sub);
+.cart-item-title {
   font-size: 1rem;
   font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.cart-item-desc {
+  font-size: 0.78rem;
+  color: var(--color-text-sub);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 1px;
+}
+
+.btn-remove-cart {
+  background: transparent;
+  border: none;
+  padding: 0 16px;
+  color: #c0c8d4;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
 }
 
-.btn-remove:hover {
-  background: var(--color-danger-bg);
+.btn-remove-cart:hover {
   color: var(--color-danger);
-  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
 }
 
+.btn-remove-cart .material-icons-round { font-size: 22px; }
+
+/* 빈 장바구니 */
 .empty-msg {
   text-align: center;
   color: var(--color-text-sub);
   padding: 60px 16px 24px;
 }
 
-.empty-msg .empty-emoji {
-  font-size: 3.5rem;
+.empty-msg .empty-icon {
   display: block;
+  font-size: 3rem;
+  color: #d0d8e4;
   margin-bottom: 14px;
 }
+
+.empty-msg .empty-icon .material-icons-round { font-size: 72px; }
 
 .empty-msg .empty-title {
   font-size: 1.15rem;
@@ -615,32 +672,65 @@ button { cursor: pointer; }
   padding: 11px 24px;
   font-weight: 700;
   font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: background 0.18s;
 }
 
 .empty-msg .btn-back:hover { background: var(--color-blue-d); }
+.empty-msg .btn-back .material-icons-round { font-size: 20px; }
 
+/* 장바구니 Footer — 쇼핑몰 주문 요약 스타일 */
 #cart-footer {
   background: var(--color-white);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-sm);
-  padding: 16px 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.cart-summary-bar {
+  padding: 14px 20px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  align-items: center;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cart-summary-label {
+  font-size: 0.88rem;
+  color: var(--color-text-sub);
+  font-weight: 600;
+}
+
+#cart-count {
+  font-weight: 800;
+  color: var(--color-blue);
+  font-size: 1.05rem;
+}
+
+.cart-action-row {
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  align-items: center;
 }
 
 .btn-clear-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: transparent;
   color: var(--color-text-sub);
   border: 1px solid var(--color-border-d);
   border-radius: var(--radius-btn);
-  padding: 9px 16px;
-  font-size: 0.85rem;
+  padding: 10px 14px;
+  font-size: 0.84rem;
   font-weight: 600;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  transition: all 0.15s;
 }
 
 .btn-clear-cart:hover {
@@ -649,25 +739,28 @@ button { cursor: pointer; }
   border-color: var(--color-danger);
 }
 
-#cart-count {
-  font-weight: 700;
-  color: var(--color-blue);
-  font-size: 1rem;
-}
+.btn-clear-cart .material-icons-round { font-size: 18px; }
 
 #btn-checkout {
+  flex: 1;
   background: var(--color-primary);
   color: white;
   border: none;
   border-radius: var(--radius-btn);
-  padding: 11px 28px;
+  padding: 13px 16px;
   font-size: 1rem;
   font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   transition: background 0.18s, transform 0.05s;
+  box-shadow: var(--shadow-sm);
 }
 
 #btn-checkout:hover { background: var(--color-primary-d); }
 #btn-checkout:active { transform: scale(0.98); }
+#btn-checkout .material-icons-round { font-size: 20px; }
 
 /* ── Checkout Form ── */
 #checkout-form {
@@ -1739,25 +1832,24 @@ fieldset input[aria-invalid="true"] {
 /* ── Responsive ── */
 @media (max-width: 768px) {
   #sdg-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  #main-header { padding: 8px 12px; gap: 8px; height: auto; min-height: var(--header-h); }
-  #header-title { font-size: 1.15rem; }
-  #main-header nav button { padding: 6px 10px; font-size: 0.85rem; }
-  #lang-btn { font-size: 0.8rem; padding: 6px 8px; }
-  #nav-cart-btn .nav-cart-text { display: none; }
-  #nav-help-btn .nav-help-text { display: none; }
-  .slide { min-height: 200px; }
-  .slide-text-banner h2 { font-size: 1.35rem; }
-  .slide-play-icon { width: 54px; height: 54px; font-size: 1.6rem; }
+  #main-header { padding: 0 10px; height: var(--header-h); }
+  #header-title { font-size: 1.1rem; }
+  .lang-label { display: none; }
+  .slide { min-height: 180px; }
+  .slide-text-banner h2 { font-size: 1.2rem; }
+  .slide-play-icon { width: 48px; height: 48px; font-size: 1.4rem; }
   .field-grid { grid-template-columns: 1fr; }
   .form-actions { flex-direction: column-reverse; align-items: stretch; }
   .form-actions > * { width: 100%; }
   #receipt-actions { gap: 6px; padding: 10px 12px; }
   #receipt-actions button { font-size: 0.78rem; padding: 9px 4px; }
   .receipt-paper { max-width: 100%; }
+  .cart-item-thumb { width: 56px; font-size: 1.6rem; }
+  .cart-item-title { font-size: 0.92rem; }
 }
 
 @media (max-width: 500px) {
-  .page { padding: 16px 12px; }
+  .page { padding: 16px 12px 32px; }
   .card-desc { display: none; }
   .card-header { height: 120px; padding-right: 56px; }
   .card-title { font-size: 0.95rem; }
@@ -1767,8 +1859,9 @@ fieldset input[aria-invalid="true"] {
   .btn-quick { padding: 7px 4px; }
   .rcp-section { padding: 8px 14px; }
   .help-steps li { padding: 12px 12px; gap: 10px; }
-  #cart-footer { flex-direction: column; gap: 8px; align-items: stretch; }
-  #cart-footer > * { width: 100%; text-align: center; }
+  .cart-action-row { flex-direction: column; }
+  .cart-action-row > * { width: 100%; justify-content: center; }
+  .cart-item-desc { display: none; }
 }
 
 @media (max-width: 360px) {
