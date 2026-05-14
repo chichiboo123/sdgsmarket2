@@ -92,6 +92,16 @@ function renderCartPage() {
   footerEl.classList.remove('hidden');
   const countEl = document.getElementById('cart-count');
   if (countEl) countEl.textContent = t('cart_count_template', { n: cart.length });
+
+  const existingClear = footerEl.querySelector('.btn-clear-cart');
+  if (!existingClear) {
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'btn-clear-cart';
+    clearBtn.dataset.action = 'clear-cart';
+    clearBtn.textContent = '🗑 장바구니 비우기';
+    footerEl.appendChild(clearBtn);
+  }
 }
 
 function renderCheckoutPage() {
@@ -141,16 +151,10 @@ function updateCartBadge() {
 
 function updateCartBar() {
   const bar = document.getElementById('cart-bar');
-  const textEl = document.getElementById('cart-bar-text');
-  const count = getCart().length;
-  if (!bar) return;
-
-  const hideOnPage = currentPage === 'cart' || currentPage === 'checkout';
-  const shouldShow = count > 0 && !hideOnPage;
-
-  bar.classList.toggle('hidden', !shouldShow);
-  document.body.classList.toggle('cart-bar-visible', shouldShow);
-  if (textEl) textEl.textContent = t('cart_bar_text_template', { n: count });
+  if (bar) {
+    bar.classList.add('hidden');
+  }
+  document.body.classList.remove('cart-bar-visible');
 }
 
 function showToast(message) {
