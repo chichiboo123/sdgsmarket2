@@ -310,8 +310,8 @@
       </button>
     </div>
     <div id="receipt-actions">
-      <button type="button" id="btn-download" data-i18n="btn_download">다운로드</button>
-      <button type="button" id="btn-print" data-i18n="btn_print">인쇄</button>
+      <button type="button" id="btn-download">⬇ JPG 저장</button>
+      <button type="button" id="btn-clipboard">📋 클립보드 복사</button>
       <button type="button" id="btn-complete" data-i18n="btn_complete">완료</button>
     </div>
   </div>
@@ -349,6 +349,7 @@
   </footer>
 
   <!-- ── 스크립트 (순서 중요) ── -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
   <script src="js/data.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/cart.js"></script>

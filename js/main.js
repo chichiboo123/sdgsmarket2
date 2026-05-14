@@ -250,7 +250,7 @@ function validateCheckoutForm() {
 
 // Receipt modal buttons
 document.getElementById('btn-download')?.addEventListener('click', downloadReceipt);
-document.getElementById('btn-print')?.addEventListener('click', () => window.print());
+document.getElementById('btn-clipboard')?.addEventListener('click', copyReceiptToClipboard);
 document.getElementById('btn-complete')?.addEventListener('click', () => {
   closeModal('modal-receipt');
   openModal('modal-complete');
